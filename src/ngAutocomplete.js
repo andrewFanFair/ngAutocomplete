@@ -15,6 +15,7 @@
  * + options - configuration for the autocomplete (Optional)
  *
  *       + types: type,        String, values can be 'geocode', 'establishment', '(regions)', or '(cities)'
+ *       + callback: function, Function that fires after the place selection is selected, it passes back the places result
  *       + bounds: bounds,     Google maps LatLngBounds Object, biases results to bounds, but may return results outside these bounds
  *       + country: country    String, ISO 3166-1 Alpha-2 compatible country code. examples; 'ca', 'us', 'gb'
  *       + watchEnter:         Boolean, true; on Enter select top autocomplete result. false(default); enter ends autocomplete
@@ -92,6 +93,10 @@ angular.module( "ngAutocomplete", [])
 
                 scope.details = result;
 
+                if (typeof scope.options.callback !== 'undefined'){
+                  scope.options.callback(result)
+                }
+
                 controller.$setViewValue(element.val());
               });
             }
@@ -103,7 +108,7 @@ angular.module( "ngAutocomplete", [])
           }
         })
 
-        //function to get retrieve the autocompletes first result using the AutocompleteService 
+        //function to get retrieve the autocompletes first result using the AutocompleteService
         var getPlace = function(result) {
           var autocompleteService = new google.maps.places.AutocompleteService();
           if (result.name.length > 0){
